@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var io = require('socket.io')(3005);
+var io = require('socket.io');
 var mongoose = require('mongoose');
 
 var Chat = require('./models/chat');
@@ -26,6 +26,7 @@ console.log('db connection requested');
 // ?chat=59c6d75b723f4b485f277003
 
 var app = express();
+app.io = io;
 console.log('express app instantiated');
 
 // view engine setup
