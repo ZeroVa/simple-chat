@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var io = require('socket.io');
+var io = require('socket.io')();
 var mongoose = require('mongoose');
 
 var Chat = require('./models/chat');
