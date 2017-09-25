@@ -13,7 +13,11 @@ var Message = require('./models/message');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-mongoose.connect('mongodb://simplechatuser:simplechatuser@ds062448.mlab.com:62448/simple-chat', { useMongoClient: true, promiseLibrary: global.Promise });
+if(!process.env.mongoUrl) {
+  throw new Error('You need to specify a mongodb connection url!');
+}
+
+mongoose.connect(process.env.mongoUrl, { useMongoClient: true, promiseLibrary: global.Promise });
 // ?chat=59c6312268b8823d0ed32862
 // ?chat=59c6d548723f4b485f276ffb
 // ?chat=59c6d733723f4b485f277001
