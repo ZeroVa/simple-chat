@@ -1,0 +1,48 @@
+@import 'bootstrap/scss/bootstrap';
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.header {
+  background-color: #808080;
+}
+
+body {
+  background-color: #F4F5F7;
+  font-family: serif;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.chat-window{
+  max-width: 480px;
+  margin-top: 10em;
+}
+
+.new-message-box {
+  input {
+    border: 1px solid #9B9B9B;
+  }
+
+  button {
+    cursor: pointer;
+    background-color: #572CB9;
+    border: none;
+    color: white;
+  }
+}
+
+.messages-window {
+  height: 30em;
+  overflow-y: scroll;
+  overflow-wrap: normal;
+  border: 1px solid #9B9B9B;
+
+  ul li {
+    word-break: break-all;
+  }
+}
