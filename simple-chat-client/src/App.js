@@ -3,7 +3,7 @@ import './App.css';
 import openSocket from 'socket.io-client';
 import qs from 'query-string';
 
-const socket = openSocket(window.location.hostname+':3005');
+const socket = openSocket(window.location.hostname);
 
 var ChatMessage = (props) => (
   <li><p>
