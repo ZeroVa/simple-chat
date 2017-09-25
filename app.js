@@ -13,21 +13,14 @@ var Message = require('./models/message');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-if(!process.env.mongoUrl) {
+if (!process.env.mongoUrl) {
   throw new Error('You need to specify a mongodb connection url!');
 }
 
 mongoose.connect(process.env.mongoUrl, { useMongoClient: true, promiseLibrary: global.Promise });
-console.log('db connection requested');
-// ?chat=59c6312268b8823d0ed32862
-// ?chat=59c6d548723f4b485f276ffb
-// ?chat=59c6d733723f4b485f277001
-// ?chat=59c6d73a723f4b485f277002
-// ?chat=59c6d75b723f4b485f277003
 
 var app = express();
 app.io = io;
-console.log('express app instantiated');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -64,70 +57,48 @@ app.use(function (err, req, res, next) {
 });
 
 io.on('connection', function (socket) {
-  console.log('a user connected');
-
   socket.on('startChat', function (chatId) {
+    // If no chat specified, make a new chat
     if (chatId == undefined) {
       var newChat = new Chat({
         started: new Date(),
         lastUpdated: new Date(),
       });
+      // Save the new chat and send it out
       newChat.save((err) => {
-        if (!err) {
-          console.log('saved new chat ' + newChat._id);
-          socket.join(newChat._id);
-          socket.emit('startChat', newChat);
-        }
-        else {
-          console.log(err);
-        }
+        if (err) return;
+        socket.join(newChat._id);
+        socket.emit('startChat', newChat);
       });
-    }
-    else {
-      var thisChatOne = Chat.findById(chatId, (err, chat) => {
-        console.log("getting it simply");
-      });
-      var thisChat = Chat.findById(chatId).populate().exec((err, chat) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        console.log('sending out chat ' + chat._id);
+    } else {
+      // Chat exists, find it and send it out, with all messages populated
+      Chat.findById(chatId).populate().exec((err, chat) => {
+        if (err) return;
         socket.join(chat._id);
-        console.log("joining socket ");
-        console.log(socket);
         socket.emit('startChat', chat);
       });
     }
   });
 
+  // Someone sent in a new message
   socket.on('newMessage', (msg) => {
+    // Find the right chat
     Chat.findById(msg.chatId, (err, chat) => {
-      if(err){
-        console.log(err);
-        return;
-      }
+      if (err) return;
+      // Create a new message
       var newMessage = new Message({
         sender: 'anon',
         messageText: msg.messageText,
         sent: msg.sent,
       });
-      console.log('here is your chat');
-      console.log(chat);
-      chat.update( {$push: {messages: newMessage}}, (err, done) => {
-        console.log("here's the done object");
-        console.log(err || done);
+      // Add the message to the chat, update chat, send message to others in room
+      chat.update({ $push: { messages: newMessage } }, (err, done) => {
         io.sockets.in(chat._id).emit('newMessage', newMessage);
-        // socket.broadcast.to(chat._id).emit('newMessage', newMessage);
-        // socket.emit('newMessage', newMessage);
       });
     });
   });
 
   socket.on('disconnect', function () {
-    console.log('user disconnected');
-  });
-  socket.on('chat message', function (msg) {
 
   });
 });

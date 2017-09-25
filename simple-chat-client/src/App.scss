@@ -19,8 +19,12 @@ body {
 }
 
 .chat-window{
+  @include media-breakpoint-up(sm) {
+    margin-top: 10em;
+  }
+  margin-top: 3em;
   max-width: 480px;
-  margin-top: 10em;
+  margin-bottom: 3em;
 }
 
 .new-message-box {

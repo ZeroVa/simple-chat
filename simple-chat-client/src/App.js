@@ -5,9 +5,10 @@ import qs from 'query-string';
 
 const socket = openSocket(window.location.hostname);
 
+// Inline component for ChatMessage, in case we want to break it out later
 var ChatMessage = (props) => (
   <li><p>
-    <span className="text-primary">{new Date(props.message.sent).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'})}</span>
+    <span className="text-primary">{new Date(props.message.sent).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })}</span>
     : {props.message.messageText}
   </p></li>
 );
@@ -22,6 +23,7 @@ class App extends Component {
       chat: undefined,
       shouldScrollToBottom: false,
     }
+
     socket.on('startChat', chat => {
       this.setState({ chat: chat, shouldScrollToBottom: true });
       var old = qs.parse(this.props.location.search);
@@ -56,18 +58,12 @@ class App extends Component {
     this.setState({ newMessage: '' });
   }
 
-  componentWillMount() {
-
-  }
-
-
   componentDidUpdate() {
     if (this.state.shouldScrollToBottom) {
       this.messagesWindow.scrollTop = this.messagesWindow.scrollHeight;
       this.setState({ shouldScrollToBottom: false });
     }
   }
-
 
   render() {
     return (
