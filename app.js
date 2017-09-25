@@ -18,6 +18,7 @@ if(!process.env.mongoUrl) {
 }
 
 mongoose.connect(process.env.mongoUrl, { useMongoClient: true, promiseLibrary: global.Promise });
+console.log('db connection requested');
 // ?chat=59c6312268b8823d0ed32862
 // ?chat=59c6d548723f4b485f276ffb
 // ?chat=59c6d733723f4b485f277001
@@ -25,6 +26,7 @@ mongoose.connect(process.env.mongoUrl, { useMongoClient: true, promiseLibrary: g
 // ?chat=59c6d75b723f4b485f277003
 
 var app = express();
+console.log('express app instantiated');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
